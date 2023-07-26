@@ -14,10 +14,11 @@ const firebaseConfig = {
   appId: "1:421339161685:web:82ed020e262cf4bef460dc",
   authDomain: "my-test-project-f9bd9.firebaseapp.com",
 };
+const isIframe = location != parent.location ? true : false;
 const vapidKey =
   "BB7AfITRyvjdrjJX4IEDsc45ZxuksF9_SXQaa0zV5DOWv1sWVXkX_83Y263Vric_QwUcB73258oq9rs5voGC4yw";
 
-function requestPermission() {
+function initService() {
   Notification.requestPermission().then((permission) => {
     if (permission != "granted") return console.log("permission denied");
 
@@ -27,8 +28,7 @@ function requestPermission() {
       if (!token) return console.log("can not get token");
 
       console.log("token:", token);
-      if (location != parent.location)
-        return console.log("in iframe, stop redirect");
+      if (isIframe) return console.log("in iframe, stop redirect");
 
       const app = new URL(window.location.href).searchParams.get("app");
 
@@ -41,4 +41,22 @@ function requestPermission() {
     });
   });
 }
-requestPermission();
+
+(() => {
+  const ui = document.querySelector(".ui");
+  const button = document.querySelector(".button");
+  const isFF = navigator.userAgent.includes("Firefox");
+
+  if (!isIframe) ui.classList.remove("hidden");
+
+  if (isFF && Notification.permission === "default") {
+    button.classList.remove("hidden");
+
+    button.addEventListener("click", () => {
+      button.classList.add("hidden");
+      initService();
+    });
+  } else {
+    initService();
+  }
+})();

@@ -6,9 +6,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Notification</title>
+  <style>
+    .center {
+      top: 50%;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+
+    .button {
+      z-index: 10;
+      font-size: 2.5rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="ui hidden">
+    <img class="center" src="./spinner.svg" />
+    <button class="center button hidden">Allow notifications?</button>
+  </div>
   <script type="module" src="index.js"></script>
 </body>
 
