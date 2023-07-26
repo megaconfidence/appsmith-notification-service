@@ -47,16 +47,21 @@ self.addEventListener("notificationclick", (e) => {
         // if open tab exists, focus on tab
         const hadWindowToFocus = clientsArr.some((windowClient) =>
           windowClient.url.includes(e.notification.data.url)
-            ? (windowClient.focus(), true)
+            ? (windowClient.focus().then((c) => {
+                c.postMessage(e.notification);
+              }),
+              true)
             : false
         );
         // else, open a new tab
         if (!hadWindowToFocus)
-          clients
-            .openWindow(e.notification.data.url)
-            .then((windowClient) =>
-              windowClient ? windowClient.focus() : null
-            );
+          clients.openWindow(e.notification.data.url).then((windowClient) =>
+            windowClient
+              ? windowClient.focus().then((c) => {
+                  c.postMessage(e.notification);
+                })
+              : null
+          );
       })
   );
 });

@@ -60,3 +60,9 @@ function initService() {
     initService();
   }
 })();
+
+navigator.serviceWorker.addEventListener("message", (event) => {
+  const message = event.data.notification;
+  console.log(message);
+  window.parent.postMessage(message, "*");
+});
